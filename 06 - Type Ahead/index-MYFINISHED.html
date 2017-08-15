@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const cityPoint = [];
+  const ipt = document.getElementsByClassName('search')[0];
+  const suggestions = document.getElementsByClassName('suggestions')[0];
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = () => {
+    if(xhr.readyState == 4) {
+      if((xhr.status >= 200 && xhr.status <= 300) || xhr.status == 304) {
+        const citys = JSON.parse(xhr.responseText).sort((a,b) => b.population - a.population);
+        cityPoint.push(...citys);
+        ipt.addEventListener('input',searchCity);
+      }
+    }
+  }
+  xhr.open('get',endpoint,true);
+  xhr.send(null);
+  function searchCity(e) {
+    const lis = document.createDocumentFragment();
+    const result = cityPoint.forEach(point => {
+      const reg = new RegExp(e.target.value,'gi');
+      const commasReg = /\B(?=(\d{3})+$)/g;
+      if(reg.test(point.city) || reg.test(point.state)) {
+        const name = `${point.city}, ${point.state}`.replace(reg,'<span class=\'hl\'>$&</span>');
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${name}</span><span class='population'>${point.population.replace(commasReg,',')}</span>`;
+        lis.appendChild(li);
+      }
+    });
+    suggestions.innerHTML = '';
+    suggestions.appendChild(lis);
+  }
+  //复习使用了原生ajax写法，插入搜索结果是用documentFragment先一条条插入li，最后再插入到dom中提高性能，要不卡得不能忍，答案用得是全字符串拼接，感觉更好点。
+  //正则表达式不用就是记不住，又回去看了遍。在网上找了两种效率较高的千分制转化方法：
+  // function toThousands(num) {
+  //     var result = '', counter = 0;
+  //     num = (num || 0).toString();
+  //     for (var i = num.length - 1; i >= 0; i--) {
+  //         counter++;
+  //         result = num.charAt(i) + result;
+  //         if (!(counter % 3) && i != 0) { result = ',' + result; }
+  //     }
+  //     return result;
+  // }
+  // function toThousands(num) {
+  //     var num = (num || 0).toString(), result = '';
+  //     while (num.length > 3) {
+  //         result = ',' + num.slice(-3) + result;
+  //         num = num.slice(0, num.length - 3);
+  //     }
+  //     if (num) { result = num + result; }
+  //     return result;
+  // }
+</script>
+  </body>
+</html>
