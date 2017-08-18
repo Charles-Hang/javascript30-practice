@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+	const queue = [];
+	const triggerCode = 'hswxing';
+	document.body.addEventListener('keyup', (e) => {
+		queue.push(e.key);
+		if(queue.length > triggerCode.length) {
+			queue.shift();
+		}
+		//没想到用splice处理队列的长度，学习了
+		//queue.splice(-triggerCode.length - 1,queue.length - triggerCode.length);
+		//wesbos会玩
+		if(queue.join('').includes(triggerCode)){
+			console.log('secret is triggered');
+			cornify_add();
+		}
+		console.log(e.key,queue);
+	});
+</script>
+</body>
+</html>

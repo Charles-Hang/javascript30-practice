@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+
+    // Interpolated
+    console.log('%s is a string,%d is a number','lalala',666);
+    // Styled
+    console.log('%c this is a styled sentence','color: #0f0;font-size: 20px;');
+    // warning!
+    console.warn('this is a warning');
+    // Error :|
+    console.error('this is a error');
+    // Info
+    console.info('this is a info');
+    // Testing
+    console.assert(dogs[1].age < 5,'age can\'t larger than 5!');
+    // clearing
+    // console.clear();
+
+    // Viewing DOM Elements
+    const p = document.querySelector('p');
+    console.log(p);
+    console.dir(p);
+    // Grouping together
+    dogs.forEach(dog => {
+      console.groupCollapsed(`${dog.name}`);
+      console.log(dog.name);
+      console.log(`It's ${dog.age} years old.`);
+      console.groupEnd(`${dog.name}`);
+    })
+    // counting
+    console.count('a');
+    console.count('a');
+    console.count('b');
+    console.count('a');
+    console.count('a');
+    console.count('b');
+    console.count('a');
+    console.count('a');
+    console.count('c');
+    // timing
+    const arr = [];
+    console.time('for loop');
+    for(let i = 0; i < 1000000; i++) {
+      arr.push(i);
+    }
+    console.timeEnd('for loop');
+
+    //console还是挺有意思的,table time dir感觉很有用。
+  </script>
+</body>
+</html>
