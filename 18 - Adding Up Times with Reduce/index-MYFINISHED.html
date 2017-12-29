@@ -217,12 +217,27 @@
     return `${h}:${m}:${s}`;
   }
   function addUpTime2(time) {
+    console.log(time);
     const sum = time
-                  .map(time => time.split(':').length === 2 ? time.split(':').unshift('0') : time.split(':'))
+                  .map(t => {
+                    const st = t.split(':');
+                    if(st.length === 2) {
+                      st.unshift('0');
+                    }
+                    return st;
+                  })
                   .reduce((total,next) => [parseInt(total[0]) + parseInt(next[0]),parseInt(total[1]) + parseInt(next[1]),parseInt(total[2]) + parseInt(next[2])]);
-    sum[1] += sum[2]/60
+    sum[1] += Math.floor(sum[2]/60);
+    sum[0] += Math.floor(sum[1]/60);
+    sum[2] = sum[2]%60;
+    sum[1] = sum[1]%60;
+    return `${sum[0]}:${sum[1]}:${sum[2]}`;
   }
-  console.log(addUpTime(videos));
+  console.log(addUpTime2(videos));
+
+  //第一次做完才发现要用reduce，改成reduce后确实好很多，逻辑判断少了，更简洁。
+  //我比示例在开始时多考虑了小时的因素。
+  //示例的思路是将所有的时间秒数相加，最后计算小时，分钟。我的是分开的，感觉合起来更好。
 </script>
 </body>
 </html>
